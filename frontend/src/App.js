@@ -36,7 +36,7 @@ export default function App() {
       <AppHeader />
       {isError && <p>Something terrible just happened: {error.message}</p>}
       {isLoading && <p>loading</p>}
-      {isSuccess && <Gallery photos={photos} />}
+      {isSuccess && <Gallery photos={photos} onDelete={fetchPhotos} />}
       <ImageUpload onUpload={fetchPhotos} />
     </Wrapper>
   )

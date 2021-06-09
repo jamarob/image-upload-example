@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +37,11 @@ public class PhotoController {
         image.transferTo(fileToUpload);
         Photo photoToSave = cloudinaryService.uploadImage(fileToUpload);
         return photoService.savePhoto(photoToSave);
+    }
+
+    @DeleteMapping("{id}")
+    public void deletePhoto(@PathVariable String id) throws IOException {
+        cloudinaryService.deletePhoto(id);
+        photoService.deletePhoto(id);
     }
 }
