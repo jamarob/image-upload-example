@@ -10,7 +10,7 @@ export default function App() {
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState()
 
-  useEffect(() => {
+  const fetchPhotos = () => {
     setStatus('loading')
     axios
       .get('photo')
@@ -21,6 +21,10 @@ export default function App() {
         setError(error)
         setStatus('error')
       })
+  }
+
+  useEffect(() => {
+    fetchPhotos()
   }, [])
 
   const isLoading = status === 'loading'
@@ -32,8 +36,8 @@ export default function App() {
       <AppHeader />
       {isError && <p>Something terrible just happened: {error.message}</p>}
       {isLoading && <p>loading</p>}
-      {isSuccess && <Gallery photos={photos} />}
-      <ImageUpload />
+      {isSuccess && <Gallery photos={photos} onDelete={fetchPhotos} />}
+      <ImageUpload onUpload={fetchPhotos} />
     </Wrapper>
   )
 }
