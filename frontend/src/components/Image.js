@@ -1,11 +1,14 @@
 import styled from 'styled-components/macro'
 import axios from 'axios'
+import { useQueryClient } from 'react-query'
 
-export default function Image({ url, id, onDelete }) {
+export default function Image({ url, id }) {
+  const queryClient = useQueryClient()
+
   const deleteImage = () => {
     axios
       .delete('/photo/' + id)
-      .then(onDelete)
+      .then(() => queryClient.invalidateQueries('photos'))
       .catch(error => console.log(error))
   }
 

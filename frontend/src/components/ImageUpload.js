@@ -1,31 +1,34 @@
 import styled from 'styled-components/macro'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import axios from 'axios'
+import { useMutation, useQueryClient } from 'react-query'
 
-export function ImageUpload({ onUpload }) {
+export function ImageUpload() {
   const inputRef = useRef()
-  const [status, setStatus] = useState('ready')
-  const [error, setError] = useState('')
+  const queryClient = useQueryClient()
+  const {
+    isError,
+    isLoading,
+    error,
+    mutate: uploadPhoto,
+  } = useMutation(
+    file => {
+      const formData = new FormData()
+      formData.set('image', file)
+      return axios.post('/photo/upload', formData).then(res => res.data)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('photos')
+      },
+    }
+  )
 
   const handleSubmit = event => {
     event.preventDefault()
-    setStatus('loading')
     const file = inputRef.current.files[0]
-    const formData = new FormData()
-    formData.set('image', file)
-    axios
-      .post('/photo/upload', formData)
-      .then(res => res.data)
-      .then(onUpload)
-      .then(() => setStatus('ready'))
-      .catch(error => {
-        setStatus('error')
-        setError(error)
-      })
+    uploadPhoto(file)
   }
-
-  const isError = status === 'error'
-  const isLoading = status === 'loading'
 
   return (
     <Wrapper onSubmit={handleSubmit}>
