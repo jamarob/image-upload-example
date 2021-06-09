@@ -34,6 +34,7 @@ public class PhotoController {
     public Photo uploadImage(@RequestParam MultipartFile image) throws IOException {
         File fileToUpload = File.createTempFile("photo", null);
         image.transferTo(fileToUpload);
-        return cloudinaryService.uploadImage(fileToUpload);
+        Photo photoToSave = cloudinaryService.uploadImage(fileToUpload);
+        return photoService.savePhoto(photoToSave);
     }
 }

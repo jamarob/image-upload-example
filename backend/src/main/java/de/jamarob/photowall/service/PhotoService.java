@@ -21,4 +21,7 @@ public class PhotoService {
         return repository.findAll();
     }
 
+    public Photo savePhoto(Photo photoToSave) {
+        return repository.save(photoToSave);
+    }
 }
